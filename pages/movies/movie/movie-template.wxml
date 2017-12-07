@@ -1,0 +1,9 @@
+<import src="../rating/rating-template.wxml" />
+
+<template name="movieTemplate">
+  <view class="movie-container">
+    <image class="movie-img" src="{{coverage}}"></image>
+    <text class="movie-title">{{title}}</text>
+    <template is="ratingTemplate" data="{{...rating}}" />
+  </view>
+</template>

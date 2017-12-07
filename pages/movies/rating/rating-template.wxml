@@ -1,0 +1,11 @@
+<template name="ratingTemplate">
+  <view class="rating-container">
+    <view class="rating">
+      <block wx:for="{{stars}}" wx:for-item="star">
+        <image wx:if="{{star}}" src="/images/icon/star.png"></image>
+        <image wx:else src="/images/icon/chat.png"></image>
+      </block>
+    </view>
+    <text class="rating-score">{{average}}</text>
+  </view>
+</template>

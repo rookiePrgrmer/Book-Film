@@ -1,0 +1,22 @@
+.rating-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.rating {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 24rpx;
+}
+
+.rating image {
+  flex: 1;
+  padding-left: 3rpx;
+  height: 17rpx;
+  width: 17rpx;
+}
+
+.rating-score {
+  color: #1f3463;
+}
