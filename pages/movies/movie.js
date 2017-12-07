@@ -15,7 +15,7 @@ Page({
 
     this.getMovieListData(inTheatersUrl, 'inTheaters', '正在上映');
     this.getMovieListData(comingSoonUrl, 'comingSoon', '即将上映');
-    this.getMovieListData(top250Url, 'top250', 'top250');
+    this.getMovieListData(top250Url, 'top250', '豆瓣Top250');
   },
   getMovieListData(url, key, title) {
     wx.request({
