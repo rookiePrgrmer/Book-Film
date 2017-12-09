@@ -8,7 +8,7 @@ Page({
     this.data.category = category;
     let dataUrl = '';
     switch (category) {
-      case '正在上映':
+      case '不再上映':
         dataUrl = `${app.globalData.doubanBase}/v2/movie/in_theaters`;
         break;
       case '即将上映':
