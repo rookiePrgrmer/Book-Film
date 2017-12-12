@@ -2,6 +2,7 @@
 
 .grid-container {
     width: 732rpx;
+    height: 1300rpx;
     margin: 40rpx auto;
 }
 .grid-container:after{

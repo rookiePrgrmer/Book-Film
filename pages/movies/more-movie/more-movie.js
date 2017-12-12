@@ -3,7 +3,9 @@ const util = require('../../../utils/util.js');
 
 Page({
   data: {
-    movies: []
+    movies: [],
+    requestUrl: '',
+    totalCount: 0
   },
   onLoad: function (options) {
     let category = options.category;
@@ -21,6 +23,8 @@ Page({
         break;
     }
 
+    // 记录当前页面请求的
+    this.data.requestUrl = dataUrl;
     util.http(dataUrl, this.processDoubanData);
   },
   /**
@@ -46,6 +50,8 @@ Page({
       movies.push(temp);
     }
 
+    // 每次都累加
+    this.data.totalCount += 20;
     this.setData({
       movies
     });
@@ -54,5 +60,9 @@ Page({
     wx.setNavigationBarTitle({
       title: this.data.category
     });
+  },
+  onScrollLower(e) {
+    let nextUrl = `${this.data.requestUrl}?start=${this.data.totalCount}&count=${20}`;
+    util.http(nextUrl, this.processDoubanData);
   }
 });
