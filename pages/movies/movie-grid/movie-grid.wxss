@@ -1,0 +1,18 @@
+@import "../movie/movie-template.wxss";
+
+.grid-container {
+    width: 732rpx;
+    margin: 40rpx auto;
+}
+.grid-container:after{
+    content: " ";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.single-view-container {
+    float: left;
+    margin-bottom: 40rpx;
+}

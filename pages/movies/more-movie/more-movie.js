@@ -1,8 +1,10 @@
 const app = getApp();
-const http = require('../../../utils/util.js').http;
+const util = require('../../../utils/util.js');
 
 Page({
-  data: {},
+  data: {
+    movies: []
+  },
   onLoad: function (options) {
     let category = options.category;
     this.data.category = category;
@@ -19,8 +21,33 @@ Page({
         break;
     }
 
-    http(dataUrl, res => {
-      console.log(res);
+    util.http(dataUrl, this.processDoubanData);
+  },
+  /**
+   * 处理服务端返回的数据，使其符合模板的解析需求
+   */
+  processDoubanData(moviesDouban) {
+    let self = this;
+
+    let movies = [], rawMovies = moviesDouban.subjects;
+    for (let i = 0, len = rawMovies.length; i < len; i++) {
+      let subject = rawMovies[i];
+
+      let temp = {
+        title: subject.title,
+        coverage: subject.images.large,
+        movieId: subject.id,
+        rating: {
+          stars: util.convertToStarArray(subject.rating.stars),
+          average: subject.rating.average,
+        }
+      };
+
+      movies.push(temp);
+    }
+
+    this.setData({
+      movies
     });
   },
   onReady() {
