@@ -31,29 +31,30 @@ Page({
    * 处理服务端返回的数据，使其符合模板的解析需求
    */
   processDoubanData(moviesDouban) {
-    let self = this;
-
     let movies = [], rawMovies = moviesDouban.subjects;
-    for (let i = 0, len = rawMovies.length; i < len; i++) {
-      let subject = rawMovies[i];
+    if (rawMovies && rawMovies.length) {
+      for (let i = 0, len = rawMovies.length; i < len; i++) {
+        let subject = rawMovies[i];
 
-      let temp = {
-        title: subject.title,
-        coverage: subject.images.large,
-        movieId: subject.id,
-        rating: {
-          stars: util.convertToStarArray(subject.rating.stars),
-          average: subject.rating.average,
-        }
-      };
+        let temp = {
+          title: subject.title,
+          coverage: subject.images.large,
+          movieId: subject.id,
+          rating: {
+            stars: util.convertToStarArray(subject.rating.stars),
+            average: subject.rating.average,
+          }
+        };
 
-      movies.push(temp);
+        movies.push(temp);
+      }
+
+      // 每次都累加
+      this.data.totalCount += 20;
     }
 
-    // 每次都累加
-    this.data.totalCount += 20;
     this.setData({
-      movies
+      movies: this.data.movies.concat(movies)
     });
   },
   onReady() {
@@ -62,7 +63,13 @@ Page({
     });
   },
   onScrollLower(e) {
-    let nextUrl = `${this.data.requestUrl}?start=${this.data.totalCount}&count=${20}`;
-    util.http(nextUrl, this.processDoubanData);
+    let self = this;
+
+    !self.data.timeout && (self.data.timeout = setTimeout(function() {
+      let nextUrl = `${self.data.requestUrl}?start=${self.data.totalCount}&count=${20}`;
+      util.http(nextUrl, self.processDoubanData);
+
+      self.data.timeout = null;
+    }, 300));
   }
 });
