@@ -5,7 +5,8 @@ Page({
   data: {
     movies: [],
     requestUrl: '',
-    totalCount: 0
+    totalCount: 0,
+    loadBusy: false
   },
   onLoad: function (options) {
     let category = options.category;
@@ -31,6 +32,8 @@ Page({
    * 处理服务端返回的数据，使其符合模板的解析需求
    */
   processDoubanData(moviesDouban) {
+    wx.hideNavigationBarLoading();
+
     let movies = [], rawMovies = moviesDouban.subjects;
     if (rawMovies && rawMovies.length) {
       for (let i = 0, len = rawMovies.length; i < len; i++) {
@@ -51,6 +54,8 @@ Page({
 
       // 每次都累加
       this.data.totalCount += 20;
+      // 重置状态位
+      this.data.loadBusy = false;
     }
 
     this.setData({
@@ -65,11 +70,13 @@ Page({
   onScrollLower(e) {
     let self = this;
 
-    !self.data.timeout && (self.data.timeout = setTimeout(function() {
-      let nextUrl = `${self.data.requestUrl}?start=${self.data.totalCount}&count=${20}`;
-      util.http(nextUrl, self.processDoubanData);
+    if (!self.data.loadBusy) {
+      self.data.loadBusy = true;
+      console.log('loadBusy = false');
 
-      self.data.timeout = null;
-    }, 300));
+      let nextUrl = `${self.data.requestUrl}?start=${self.data.totalCount}&count=${20}`;
+      wx.showNavigationBarLoading();
+      util.http(nextUrl, self.processDoubanData);
+    }
   }
 });
