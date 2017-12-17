@@ -32,8 +32,6 @@ Page({
    * 处理服务端返回的数据，使其符合模板的解析需求
    */
   processDoubanData(moviesDouban) {
-    wx.hideNavigationBarLoading();
-
     let movies = [], rawMovies = moviesDouban.subjects;
     if (rawMovies && rawMovies.length) {
       for (let i = 0, len = rawMovies.length; i < len; i++) {
@@ -56,10 +54,13 @@ Page({
       this.data.totalCount += 20;
       // 重置状态位
       this.data.loadBusy = false;
+
+      wx.hideNavigationBarLoading();
+      wx.stopPullDownRefresh();
     }
 
     this.setData({
-      movies: this.data.movies.concat(movies)
+      movies: this.data.refresh ? [] : this.data.movies.concat(movies)
     });
   },
   onReady() {
@@ -68,6 +69,7 @@ Page({
     });
   },
   onScrollLower(e) {
+    this.data.refresh = false;
     let self = this;
 
     if (!self.data.loadBusy) {
@@ -78,5 +80,10 @@ Page({
       wx.showNavigationBarLoading();
       util.http(nextUrl, self.processDoubanData);
     }
+  },
+  onPullDownRefresh(event) {
+    this.data.refresh = true;
+    let nextUrl = `${self.data.requestUrl}?start=0&count=20`;
+    util.http(nextUrl, self.processDoubanData);
   }
 });
